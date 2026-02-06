@@ -48,9 +48,10 @@ Per-asset vault that improves capital efficiency: agents can deposit underlying 
 **Do not hardcode** AssetManagerController, AssetManager, or FXRP addresses. They differ per network (Coston2, Songbird, Flare mainnet). Resolve them at runtime via the registry.
 
 **To get the FXRP address:**
-   1. Get the **AssetManager** from the **FlareContractsRegistry**
-   2. Get **AssetManagerFXRP** from that
-   3. Call **`fAsset()`** on the AssetManager to get the FXRP ERC-20 token address. Same pattern for other FAssets (FBTC, etc.) using their AssetManager getters. **AssetManagerController** is also available from the registry when needed.
+   1. Call `getContractAddressByName("AssetManagerFXRP")` on the **FlareContractsRegistry** to get the AssetManager address.
+   2. Call **`fAsset()`** on that AssetManager to get the FXRP ERC-20 token address.
+
+Same pattern for other FAssets (e.g. `"AssetManagerFBTC"` for FBTC). **AssetManagerController** is also available from the registry when needed.
 
 **Guide:** [Get FXRP Address](https://dev.flare.network/fxrp/token-interactions/fxrp-address) — e.g. `const assetManager = await getAssetManagerFXRP(); const fasset = await assetManager.fAsset();`
 
