@@ -1,6 +1,6 @@
 # Flare FAssets — Agent Skill
 
-A shared Agent Skill for **Cursor**, **Claude Code**, and other [skills.sh](https://skills.sh/)-compatible agents. Provides domain knowledge and guidance for **Flare FAssets**: wrapped tokens (FXRP, FBTC, FDOGE, etc.), minting, redemption, agents, collateral, and smart contract integration on the Flare network. Same `SKILL.md` format works across tools.
+A shared Agent Skill for **Cursor**, **Claude Code**, and other [skills.sh](https://skills.sh/)-compatible agents. Provides domain knowledge and guidance for **Flare FAssets**: wrapped tokens (FXRP, FBTC, etc.), minting, redemption, agents, collateral, and smart contract integration on the Flare network. Same `SKILL.md` format works across tools.
 
 ## What's in the skill
 

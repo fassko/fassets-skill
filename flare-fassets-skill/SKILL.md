@@ -7,7 +7,7 @@ description: Provides domain knowledge and guidance for Flare FAssets—wrapped 
 
 ## What FAssets Are
 
-FAssets is a **trustless, over-collateralized bridge** connecting non–smart-contract networks (XRP Ledger, Bitcoin, DOGE) to Flare. It creates **wrapped ERC-20 tokens** (FAssets) such as FXRP, FBTC, FDOGE that can be used in Flare DeFi or redeemed for the underlying asset.
+FAssets is a **trustless, over-collateralized bridge** connecting non–smart-contract networks (XRP Ledger, Bitcoin, DOGE) to Flare. It creates **wrapped ERC-20 tokens** (FAssets) such as FXRP and FBTC that can be used in Flare DeFi or redeemed for the underlying asset. FXRP is live on mainnet; FBTC is on the roadmap. FDOGE (v1) was wound down in May 2025.
 
 **Powered by:**
 - **FTSO (Flare Time Series Oracle):** decentralized price feeds
