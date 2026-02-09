@@ -80,8 +80,8 @@ When team members open the project, Claude Code will prompt them to install the 
 
 Follow your tool's official documentation; here are a few popular ones:
 
-- **Codex:** [Where to save skills](https://code.claude.com/docs/en/skills#where-skills-live)
-- **Claude Code:** [Using Skills](https://code.claude.com/docs/en/skills)
+- **Codex:** [Agent Skills](https://developers.openai.com/codex/skills)
+- **Claude Code:** [Extend Claude with Skills](https://docs.anthropic.com/en/docs/claude-code/skills)
 - **Cursor:** [Enabling Skills](https://docs.cursor.com/context/rules-for-ai#skills) (or `.cursor/skills/` in your project / `~/.cursor/skills/` for all projects)
 
 **How to verify**
