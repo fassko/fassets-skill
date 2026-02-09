@@ -7,7 +7,7 @@ A shared Agent Skill for **Cursor**, **Claude Code**, and other [skills.sh](http
 - **FAssets overview:** Trustless bridge, FTSO/FDC, collateral model  
 - **Participants:** Agents, users, collateral providers, liquidators, challengers  
 - **Workflows:** Minting (reserve → pay → FDC proof → execute) and redemption; Core Vault  
-- **Contracts:** Runtime contract resolution via FlareContractsRegistry (no hardcoded network addresses)  
+- **Contracts:** Runtime contract resolution via `FlareContractsRegistry` (no hardcoded network addresses)  
 - **Smart Accounts:** XRPL users can interact with FAssets on Flare without holding FLR  
 - **Reference:** Links to [Flare Developer Hub](https://dev.flare.network/fassets/overview/) docs and APIs  
 
