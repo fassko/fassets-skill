@@ -7,7 +7,8 @@ A shared Agent Skill for **Cursor**, **Claude Code**, and other [skills.sh](http
 - **FAssets overview:** Trustless bridge, FTSO/FDC, collateral model  
 - **Participants:** Agents, users, collateral providers, liquidators, challengers  
 - **Workflows:** Minting (reserve → pay → FDC proof → execute) and redemption; Core Vault  
-- **Contracts:** Flare mainnet addresses and integration outline (AssetManager, FXRP, etc.)  
+- **Contracts:** Runtime contract resolution via FlareContractsRegistry (no hardcoded network addresses)  
+- **Smart Accounts:** XRPL users can interact with FAssets on Flare without holding FLR  
 - **Reference:** Links to [Flare Developer Hub](https://dev.flare.network/fassets/overview/) docs and APIs  
 
 The agent uses this skill when you work with FAssets, FXRP, FBTC, minting/redemption, Flare DeFi, or FAssets contracts and APIs.
@@ -30,7 +31,7 @@ Then use the skill in your AI agent, for example:
 
 > Use the flare-fassets skill and explain how to mint FXRP step by step.
 
-> Use the flare-fassets skill and list the main FAssets contracts on Flare mainnet.
+> Use the flare-fassets skill and show how to resolve the main FAssets contracts at runtime via FlareContractsRegistry.
 
 ### Option B: Claude Code Plugin
 
@@ -85,7 +86,7 @@ Follow your tool's official documentation; here are a few popular ones:
 
 **How to verify**
 
-Your agent should reference the workflow and concepts in `flare-fassets-skill/SKILL.md` and jump into `reference.md` for Flare Developer Hub links when you ask about FAssets, FXRP, minting, redemption, or contracts.
+Your agent should reference the workflow and concepts in `flare-fassets-skill/SKILL.md` and jump into `reference.md` for Flare Developer Hub links when you ask about FAssets, FXRP, minting, redemption, Smart Accounts, or runtime contract resolution.
 
 ## Repository layout
 
@@ -107,7 +108,7 @@ Only the **`flare-fassets-skill`** folder (with `SKILL.md` and `reference.md`) n
 
 - **Cursor:** [Cursor](https://cursor.com) with Agent/Skills support  
 - **Claude Code:** Node.js 18+, `npm install -g @anthropic-ai/claude-code`, then run `claude` in your project  
-- No extra runtime dependencies; the skill is markdown only  
+- Skill content is markdown only. Optional helper script `scripts/get-fxrp-address.ts` requires Node.js tooling (`ethers`, and either `ts-node` or Hardhat).  
 
 ## Links
 
