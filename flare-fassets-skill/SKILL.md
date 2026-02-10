@@ -7,17 +7,23 @@ description: Provides domain knowledge and guidance for Flare FAssets—wrapped 
 
 ## What FAssets Are
 
-FAssets is a **trustless, over-collateralized bridge** connecting non–smart-contract networks (XRP Ledger, Bitcoin, DOGE) to Flare. It creates **wrapped ERC-20 tokens** (FAssets) such as FXRP, FBTC, FDOGE that can be used in Flare DeFi or redeemed for the underlying asset.
+FAssets is a **trustless, over-collateralized bridge** connecting non–smart-contract networks (XRP Ledger, Bitcoin, DOGE) to Flare.
+
+It creates **wrapped ERC-20 tokens** (FAssets) such as FXRP, FBTC, FDOGE that can be used in Flare DeFi or redeemed for the underlying asset.
 
 **Powered by:**
 - **FTSO (Flare Time Series Oracle):** decentralized price feeds
 - **FDC (Flare Data Connector):** verifies off-chain actions (e.g. payments on other chains)
 
-**Collateral:** Stablecoin and native FLR; agents and a community collateral pool provide over-collateralization.
+**Collateral:** Stablecoin and native FLR.
+
+Agents and a community collateral pool provide over-collateralization.
 
 ## FXRP at a Glance
 
-FXRP is the ERC-20 representation of XRP on Flare, powered by the FAssets system. It is designed to be trustless and redeemable back to XRP.
+FXRP is the ERC-20 representation of XRP on Flare, powered by the FAssets system.
+
+It is designed to be trustless and redeemable back to XRP.
 
 **Key points:**
 - **EVM-compatible token:** Works with standard wallets, smart contracts, and DeFi apps on Flare.
@@ -50,43 +56,73 @@ FXRP is the ERC-20 representation of XRP on Flare, powered by the FAssets system
 3. **FDC verifies** the payment and produces attestation/proof.
 4. User (or executor) calls **executeMinting** with proof → FAssets are minted on Flare.
 
-**Fees:** Collateral Reservation Fee (CRF, native), Minting Fee (underlying), optional Executor Fee (native). If minting fails, CRF is not returned.
+**Fees:** Collateral Reservation Fee (CRF, native), Minting Fee (underlying), optional Executor Fee (native).
+
+If minting fails, CRF is not returned.
 
 ### Redemption
 Users redeem FAssets for the original underlying asset at any time (flow is request → agent pays out on underlying chain).
 
 ### Core Vault (CV)
-Per-asset vault that improves capital efficiency: agents can deposit underlying into the CV to free collateral. Multisig on the underlying network; governance can pause. Not agent-owned.
+Per-asset vault that improves capital efficiency: agents can deposit underlying into the CV to free collateral.
+
+Multisig on the underlying network; governance can pause.
+
+Not agent-owned.
 
 ## Contracts and Addresses — Get at Runtime
 
-**FlareContractsRegistry** (same on all Flare networks): `0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019`. Use it as the trusted source to resolve other contract addresses (e.g. `getContractAddressByName()`, `getAllContracts()`).
+**FlareContractsRegistry** (same on all Flare networks): `0xaD67FE66660Fb8dFE9d6b1b4240d8650e30F6019`.
 
-**Do not hardcode** AssetManagerController, AssetManager, or FXRP addresses. They differ per network (Coston2, Songbird, Flare mainnet). Resolve them at runtime via the registry.
+Use it as the trusted source to resolve other contract addresses (e.g. `getContractAddressByName()`, `getAllContracts()`).
+
+**Do not hardcode** AssetManagerController, AssetManager, or FXRP addresses.
+
+They differ per network (Coston2, Songbird, Flare mainnet).
+
+Resolve them at runtime via the registry.
 
 **To get the FXRP address:**
    1. Query the **FlareContractsRegistry** with `getContractAddressByName("AssetManagerFXRP")` — the returned address **is** the AssetManager (FXRP) contract address.
    2. Attach the **IAssetManager** interface to that address (or use it as your AssetManager instance).
-   3. Call **`fAsset()`** on the AssetManager to get the FXRP ERC-20 token address. Same pattern for other FAssets (FBTC, etc.) using their corresponding registry keys. **AssetManagerController** is also available from the registry when needed.
+   3. Call **`fAsset()`** on the AssetManager to get the FXRP ERC-20 token address.
+
+Same pattern for other FAssets (FBTC, etc.) using their corresponding registry keys.
+
+**AssetManagerController** is also available from the registry when needed.
 
 **Guide:** [Get FXRP Address](https://dev.flare.network/fxrp/token-interactions/fxrp-address) — e.g. `const assetManager = await getAssetManagerFXRP(); const fasset = await assetManager.fAsset();`
 
-**Skill resource script:** [scripts/get-fxrp-address.ts](scripts/get-fxrp-address.ts) — gets FXRP address at runtime via FlareContractsRegistry → `getContractAddressByName("AssetManagerFXRP")` → `fAsset()`. Uses ethers; set `FLARE_RPC_URL` or pass your network RPC. Run with `npx ts-node scripts/get-fxrp-address.ts` (or in a Hardhat project with `yarn hardhat run scripts/get-fxrp-address.ts --network coston2`).
+**Skill resource script:** [scripts/get-fxrp-address.ts](scripts/get-fxrp-address.ts) — gets FXRP address at runtime via FlareContractsRegistry → `getContractAddressByName("AssetManagerFXRP")` → `fAsset()`.
+
+Uses ethers; set `FLARE_RPC_URL` or pass your network RPC.
+
+Run with `npx ts-node scripts/get-fxrp-address.ts` (or in a Hardhat project with `yarn hardhat run scripts/get-fxrp-address.ts --network coston2`).
 
 ## Developer Integration (High Level)
 
 ### Minting
 
-1. **Reserve collateral:** Call `reserveCollateral(agentVault, lots, feeBIPS, executor)` on AssetManager. Pay CRF via `collateralReservationFee(lots)`. Use `CollateralReserved` event for `collateralReservationId`, payment reference, and deadlines.
-2. **Underlying payment:** User sends underlying asset to agent's underlying-chain address with the **payment reference** from the event. Must complete before `lastUnderlyingBlock` and `lastUnderlyingTimestamp`.
+1. **Reserve collateral:** Call `reserveCollateral(agentVault, lots, feeBIPS, executor)` on AssetManager.
+
+Pay CRF via `collateralReservationFee(lots)`.
+
+Use `CollateralReserved` event for `collateralReservationId`, payment reference, and deadlines.
+2. **Underlying payment:** User sends underlying asset to agent's underlying-chain address with the **payment reference** from the event.
+
+Must complete before `lastUnderlyingBlock` and `lastUnderlyingTimestamp`.
 3. **Proof:** Use FDC to get attestation/proof for the payment (e.g. Payment attestation type).
 4. **Execute minting:** Call `executeMinting(proof, collateralReservationId)` on AssetManager.
 
-**Agent selection:** Use `getAvailableAgentsDetailedList` (or equivalent), filter by free collateral lots and status, then by fee (e.g. `feeBIPS`). Prefer agents with status NORMAL.
+**Agent selection:** Use `getAvailableAgentsDetailedList` (or equivalent), filter by free collateral lots and status, then by fee (e.g. `feeBIPS`).
+
+Prefer agents with status NORMAL.
 
 ### Redeeming
 
-Request redemption (burn FAssets on Flare); the chosen agent pays out the underlying asset on the underlying chain. See [FAssets Redemption](https://dev.flare.network/fassets/redemption) and [Redeem FAssets](https://dev.flare.network/fassets/developer-guides/fassets-redeem) for the full flow (redemption request, queue, agent payout, optional swap-and-redeem / auto-redeem).
+Request redemption (burn FAssets on Flare); the chosen agent pays out the underlying asset on the underlying chain.
+
+See [FAssets Redemption](https://dev.flare.network/fassets/redemption) and [Redeem FAssets](https://dev.flare.network/fassets/developer-guides/fassets-redeem) for the full flow (redemption request, queue, agent payout, optional swap-and-redeem / auto-redeem).
 
 **Prerequisites (from Flare docs):** Flare Hardhat Starter Kit, `@flarenetwork/flare-periphery-contracts`, and for XRP payments the `xrpl` package.
 
@@ -99,13 +135,16 @@ Request redemption (burn FAssets on Flare); the chosen agent pays out the underl
 
 ## Flare Smart Accounts
 
-**Flare Smart Accounts** let XRPL users interact with FAssets on Flare **without owning any FLR**. Each XRPL address is assigned a unique smart account on Flare that only it can control.
+**Flare Smart Accounts** let XRPL users interact with FAssets on Flare **without owning any FLR**.
+
+Each XRPL address is assigned a unique smart account on Flare that only it can control.
 
 **How it works:**
 1. User sends a Payment transaction on the XRPL to a designated address, encoding instructions in the memo field as a payment reference.
 2. An operator monitors incoming XRPL transactions and requests a Payment attestation from the FDC.
 3. The operator calls `executeTransaction` on the `MasterAccountController` contract on Flare, passing the proof and the user's XRPL address.
 4. The contract verifies the proof, retrieves (or creates) the user's smart account, decodes the payment reference, and executes the requested action.
+
 
 **Supported instruction types (first nibble of payment reference):**
 
@@ -117,12 +156,15 @@ Request redemption (burn FAssets on Flare); the chosen agent pays out the underl
 
 This means XRPL users can mint/redeem FXRP, stake into Firelight, or interact with Upshift — all from a single XRPL Payment transaction.
 
+
 **Guide:** [Flare Smart Accounts](https://dev.flare.network/smart-accounts/overview)
 
 ## Minting dApps and Wallets
 
 - Minting dApps: [Oracle Daemon](https://fasset.oracle-daemon.com/flare), [AU](https://fassets.au.cc)
-- Wallets: Bifrost, Ledger, Luminite, OxenFlow (Flare + XRPL); MetaMask, Rabby, WalletConnect (Flare EVM); Xaman (XRPL). Dual-network wallets give the smoothest mint flow.
+- Wallets: Bifrost, Ledger, Luminite, OxenFlow (Flare + XRPL); MetaMask, Rabby, WalletConnect (Flare EVM); Xaman (XRPL).
+
+  Dual-network wallets give the smoothest mint flow.
 
 ## When to Use This Skill
 

@@ -1,80 +1,100 @@
-# Flare FAssets — Agent Skill
+# Flare Skills — Agent Skills for Flare Development
 
-A shared Agent Skill for **Cursor**, **Claude Code**, and other [skills.sh](https://skills.sh/)-compatible agents. Provides domain knowledge and guidance for **Flare FAssets**: wrapped tokens (FXRP, FBTC, FDOGE, etc.), minting, redemption, agents, collateral, and smart contract integration on the Flare network. Same `SKILL.md` format works across tools.
+A collection of Agent Skills for **Cursor**, **Claude Code**, and other [skills.sh](https://skills.sh/)-compatible agents.
+Provides domain knowledge and guidance for **[Flare](https://flare.network/)** development including FAssets, Smart Accounts, and more.
+Same `SKILL.md` format works across tools.
 
-## What's in the skill
+## Available Skills
 
-- **FAssets overview:** Trustless bridge, FTSO/FDC, collateral model  
-- **Participants:** Agents, users, collateral providers, liquidators, challengers  
-- **Workflows:** Minting (reserve → pay → FDC proof → execute) and redemption; Core Vault  
-- **Contracts:** Runtime contract resolution via `FlareContractsRegistry` (no hardcoded network addresses)  
-- **Smart Accounts:** XRPL users can interact with FAssets on Flare without holding FLR  
-- **Reference:** Links to [Flare Developer Hub](https://dev.flare.network/fassets/overview/) docs and APIs  
+| Skill | Description |
+|-------|-------------|
+| **[flare-fassets](flare-fassets-skill/SKILL.md)** | FAssets—wrapped tokens (FXRP, FBTC, FDOGE), minting, redemption, agents, collateral, and smart contract integration |
+| **[flare-smart-accounts](flare-smart-accounts-skill/SKILL.md)** | Smart Accounts—account abstraction for XRPL users to interact with Flare without owning FLR |
 
-The agent uses this skill when you work with FAssets, FXRP, FBTC, minting/redemption, Flare DeFi, or FAssets contracts and APIs.
+## What's in the skills
 
-## How to Use This Skill
+### flare-fassets
+- **FAssets overview:** Trustless bridge, FTSO/FDC, collateral model
+- **Participants:** Agents, users, collateral providers, liquidators, challengers
+- **Workflows:** Minting (reserve → pay → FDC proof → execute) and redemption; Core Vault
+- **Contracts:** Runtime contract resolution via `FlareContractsRegistry`
+
+### flare-smart-accounts
+- **Account abstraction:** XRPL users interact with Flare without owning FLR
+- **Instruction types:** FXRP, Firelight, Upshift, and custom instructions
+- **CLI tool:** Python CLI for encoding and sending XRPL transactions
+- **TypeScript integration:** Viem-based examples for state lookup and custom instructions
+
+The agent uses these skills when you work with FAssets, FXRP, minting/redemption, Smart Accounts, or Flare DeFi.
+
+## How to Use These Skills
 
 ### Option A: Using skills.sh (recommended)
 
-Install this skill with a single command:
+Install skills with a single command:
 
 ```bash
-npx skills add https://github.com/fassko/fassets-skill --skill flare-fassets
+# Install FAssets skill
+npx skills add https://github.com/fassko/flare-ai-skills --skill flare-fassets
+
+# Install Smart Accounts skill
+npx skills add https://github.com/fassko/flare-ai-skills --skill flare-smart-accounts
 ```
 
-(The skill name is `flare-fassets` from SKILL.md; the folder is `flare-fassets-skill`.)
+For more information, visit the [skills.sh platform page](https://skills.sh/fassko/flare-ai-skills/flare-fassets).
 
-For more information, visit the [skills.sh platform page](https://skills.sh/fassko/fassets-skill/flare-fassets).
-
-Then use the skill in your AI agent, for example:
+Then use the skills in your AI agent, for example:
 
 > Use the flare-fassets skill and explain how to mint FXRP step by step.
 
-> Use the flare-fassets skill and show how to resolve the main FAssets contracts at runtime via FlareContractsRegistry.
+> Use the flare-smart-accounts skill and show how to send a custom instruction from XRPL to Flare.
 
 ### Option B: Claude Code Plugin
 
 **Personal Usage**
 
-To install this Skill for your personal use in Claude Code:
+To install skills for your personal use in Claude Code:
 
 1. Add the marketplace:
    ```
-   /plugin marketplace add fassko/fassets-skill
+   /plugin marketplace add fassko/flare-ai-skills
    ```
-2. Install the Skill:
+2. Install the skills:
    ```
    /plugin install flare-fassets@flare-fassets-skill
+   /plugin install flare-smart-accounts@flare-smart-accounts-skill
    ```
 
 **Project Configuration**
 
-To automatically provide this Skill to everyone working in a repository, configure the repository's `.claude/settings.json`:
+To automatically provide these skills to everyone working in a repository, configure the repository's `.claude/settings.json`:
 
 ```json
 {
   "enabledPlugins": {
-    "flare-fassets@flare-fassets-skill": true
+    "flare-fassets@flare-fassets-skill": true,
+    "flare-smart-accounts@flare-smart-accounts-skill": true
   },
   "extraKnownMarketplaces": {
-    "flare-fassets-skill": {
+    "flare-ai-skills": {
       "source": {
         "source": "github",
-        "repo": "fassko/fassets-skill"
+        "repo": "fassko/flare-ai-skills"
       }
     }
   }
 }
 ```
 
-When team members open the project, Claude Code will prompt them to install the Skill.
+When team members open the project, Claude Code will prompt them to install the skills.
 
 ### Option C: Manual install
 
 1. Clone this repository.
-2. Install or symlink the **`flare-fassets-skill/`** folder following your tool's official skills installation docs (see links below).
-3. Use your AI tool as usual and ask it to use the "flare-fassets" skill for FAssets, FXRP, minting, redemption, or Flare DeFi tasks.
+2. Install or symlink the desired skill folder(s) following your tool's official skills installation docs (see links below):
+   - **`flare-fassets-skill/`** for FAssets
+   - **`flare-smart-accounts-skill/`** for Smart Accounts
+3. Use your AI tool as usual and ask it to use the appropriate skill.
 
 **Where to Save Skills**
 
@@ -86,23 +106,26 @@ Follow your tool's official documentation; here are a few popular ones:
 
 **How to verify**
 
-Your agent should reference the workflow and concepts in `flare-fassets-skill/SKILL.md` and jump into `reference.md` for Flare Developer Hub links when you ask about FAssets, FXRP, minting, redemption, Smart Accounts, or runtime contract resolution.
+Your agent should reference the workflow and concepts from the skill's `SKILL.md` and use `reference.md` for Flare Developer Hub links when you ask about FAssets, FXRP, minting, redemption, Smart Accounts, or related topics.
 
 ## Repository layout
 
 ```
-fassets-skill/
-├── README.md              # This file
-├── LICENSE                # MIT
+flare-ai-skills/
+├── README.md                    # This file
+├── LICENSE                      # MIT
 ├── .gitignore
-└── flare-fassets-skill/   # The skill to copy into your agent's skills path
-    ├── SKILL.md           # Main skill instructions
-    ├── reference.md       # Flare Developer Hub links
-    └── scripts/
-        └── get-fxrp-address.ts  # Utility: get FXRP address at runtime
+├── flare-fassets-skill/         # FAssets skill
+│   ├── SKILL.md                 # Main skill instructions
+│   ├── reference.md             # Flare Developer Hub links
+│   └── scripts/
+│       └── get-fxrp-address.ts  # Utility: get FXRP address at runtime
+└── flare-smart-accounts-skill/  # Smart Accounts skill
+    ├── SKILL.md                 # Main skill instructions
+    └── reference.md             # Flare Developer Hub links
 ```
 
-Only the **`flare-fassets-skill`** folder (with `SKILL.md` and `reference.md`) needs to live inside the tool's skills path.
+Each skill folder (with `SKILL.md` and `reference.md`) can be installed independently into the tool's skills path.
 
 ## Requirements
 
@@ -112,9 +135,10 @@ Only the **`flare-fassets-skill`** folder (with `SKILL.md` and `reference.md`) n
 
 ## Links
 
-- [Install via skills.sh](https://skills.sh/fassko/fassets-skill/flare-fassets) — one-command install for Cursor, Claude Code, Codex, and more  
-- [Flare FAssets Overview](https://dev.flare.network/fassets/overview/)  
-- [Flare Developer Hub](https://dev.flare.network/)  
+- [Install via skills.sh](https://skills.sh/fassko/flare-ai-skills/flare-fassets) — one-command install for Cursor, Claude Code, Codex, and more
+- [Flare FAssets Overview](https://dev.flare.network/fassets/overview/)
+- [Flare Smart Accounts Overview](https://dev.flare.network/smart-accounts/overview)
+- [Flare Developer Hub](https://dev.flare.network/)
 - [Flare Network](https://flare.network/)  
 
 ## License
